@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.mapper.TreeMapper" >
+  <select id="querytree" resultType="com.jk.model.Tree">
+    select *
+    from tree
+    where pid = #{pid}
+  </select>
+  <select id="querymenubyid" resultType="java.lang.Integer">
+  	select a.xid from zhong2 a where a.jid= #{rid}
+  </select>
+  <delete id="deletebyrid">
+  	delete from zhong2 where jid = #{rid}
+  </delete>
+  <insert id="savebyrid">
+    insert into zhong2(jid,xid) values
+    <foreach item="mid" index="index" collection="mids" separator=",">
+      (#{rid},${mid})
+    </foreach>
+  </insert>
+  <select id="queryshui" resultType="com.jk.model.Tree">
+    select t1.*,t2.text te from tree t1,tree t2 where t1.pid=t2.id
+
+  </select>
+
+</mapper>

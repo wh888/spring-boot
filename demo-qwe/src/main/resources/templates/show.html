@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- jqeuy默认的css样式 -->
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+
+   <!-- &lt;!&ndash; 这是jquery的核心包  &ndash;&gt;-->
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <!--&lt;!&ndash; 这是easyui的核心包  &ndash;&gt;-->
+    <script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../js/util-js.js"></script>
+    <script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+<div id="cc" class="easyui-layout" fit=true>
+    <div data-options="region:'west',title:'West',split:true" style="width:200px;">
+        <ul id="tree-ul"></ul>
+    </div>
+    <div data-options="region:'center',title:'center title'" style="padding:5px;background:#eee;">
+        <div id="tabs-div" class="easyui-tabs" fit=true>
+            <div title="首页" style="padding:20px;display:none;">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<table id="dg"></table>
+</body>
+<script type="text/javascript">
+    $(function(){
+        $("#tree-ul").tree({
+            url:"http://127.0.0.1:8081/queryTree",
+            onClick: function(node){
+                if(node.url != "" && node.url != ""){
+                    if($("#tabs-div").tabs("exists",node.text)){
+                        $("#tabs-div").tabs("select",node.text)
+                    }else{
+                        $("#tabs-div").tabs("add",{
+                            closable:true,
+                            title:node.text,
+                            href:"http://127.0.0.1:8081/"+node.url
+                        })
+                    }
+                }
+            }
+        })
+    })
+
+
+</script>
+</html>

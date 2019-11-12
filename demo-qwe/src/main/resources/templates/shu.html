@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- jqeuy默认的css样式 -->
+    <!--<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+
+    &lt;!&ndash; 这是jquery的核心包  &ndash;&gt;
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    &lt;!&ndash; 这是easyui的核心包  &ndash;&gt;
+    <script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>-->
+
+</head>
+<body>
+<table id="dga"></table>
+
+
+<script>
+    function shu(){
+        $('#dga').datagrid({
+            url:'http://127.0.0.1:8081/queryshui',
+            singleSelect:true,
+            checkOnSelect:false,
+            selectOnCheck:false,
+            columns:[
+                [
+                {field:'che',checkbox:true},
+                {field:'id',title:'主键',width:100},
+                {field:'text',title:'名称',width:100},
+                {field:'url',title:'路径',width:100},
+                {field:'te',title:'它de上级',width:100},
+                {field:'zuo',title:'操作',width:100,
+                    formatter:function(val,row,index){
+                        var a="<input type='button' value='删除' onclick='del("+row.id+")'>"
+                        return a+"<input type='button' value='修改' onclick='xuu("+row.id+")'>"
+                    }
+                }
+            ]
+            ]
+        });
+    }
+    function del(id){
+        alert(id)
+        $.ajax({
+            url:"http://127.0.0.1:8081/chu",
+            type:"post",
+            data:{id:id},
+            success:function(){
+                $('#dga').datagrid("load")
+            },
+        })
+    }
+    $(function(){
+        shu()
+        //zeng()
+    })
+</script>
+</body>
+</html>

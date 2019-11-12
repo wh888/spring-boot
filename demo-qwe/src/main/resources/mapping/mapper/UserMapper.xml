@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.model.User" >
+    <id column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="uname" property="uname" jdbcType="VARCHAR" />
+    <result column="upwd" property="upwd" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="querybyid" resultType="java.lang.Integer" >
+    select a.rid  from zhong a where a.uid = #{uid}
+  </select>
+  <update id="xiugai">
+    update user
+    set uname = #{uname,jdbcType=VARCHAR}
+    , upwd = #{upwd,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <insert id="zeng">
+    insert into user
+    values (#{uid,jdbcType=INTEGER}, #{uname,jdbcType=VARCHAR}, #{upwd,jdbcType=VARCHAR})
+  </insert>
+  <insert id="save">
+    insert into zhong(uid,rid) values
+    <foreach item="aaa" index="index" collection="rids" separator=",">
+      (#{uid},${aaa})
+    </foreach>
+  </insert>
+  <!--
+  <insert id="xin">
+    insert into user
+    values (#{uid,jdbcType=INTEGER}, #{uname,jdbcType=VARCHAR}, #{upwd,jdbcType=VARCHAR})
+  </insert>
+    <delete id="shan">
+    delete from user
+    where uid = #{uid,jdbcType=INTEGER}
+  </delete>
+   <update id="xiugai">
+    update user
+    set uname = #{uname,jdbcType=VARCHAR}
+    , upwd = #{upwd,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+&lt;!&ndash;   <select id="queryall" resultType="com.jk.model.Jue">
+    select * 
+    from jue
+  </select> &ndash;&gt;
+   <select id="querybyid" resultType="java.lang.Integer" >
+    select a.rid  from zhong a where a.uid = #{uid}
+  </select>
+  <delete id="deletebyid">
+    delete from zhong
+    where uid = #{uid,jdbcType=INTEGER}
+  </delete>
+  <insert id="save">
+  	insert into zhong(uid,rid) values
+  	<foreach item="aaa" index="index" collection="rids" separator=",">
+			(#{uid},${aaa})
+	</foreach>
+  </insert>
+  <select id="deng" resultMap="BaseResultMap">
+  	select * from user where uname = #{uname} 
+  	and upwd = #{upwd}
+  </select>-->
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <sql id="Base_Column_List" >
+    uid, uname
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user
+    where uid = #{uid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jk.model.User" >
+    insert into user (uid, uname)
+    values (#{uid,jdbcType=INTEGER}, #{uname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jk.model.User" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="uname != null" >
+        uname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="uname != null" >
+        #{uname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jk.model.User" >
+    update user
+    <set >
+      <if test="uname != null" >
+        uname = #{uname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jk.model.User" >
+    update user
+    set uname = #{uname,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+</mapper>

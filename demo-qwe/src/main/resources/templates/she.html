@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<tr th:each="r:${list}">
+    <td>
+        <input type="checkbox" th:attr="checked=${r.uzt}" name="aaa" th:value="${r.rid}">
+    </td>
+    <td th:text="${r.rname}">
+
+    </td>
+
+</tr>
+<!--<c:forEach items="${list}" var="r">
+    <input type="checkbox" ${r.uzt} name="aaa" value="${r.rid}">${r.rname}<br>
+</c:forEach>-->
+</body>
+</body>
+</html>

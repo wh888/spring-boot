@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- jqeuy默认的css样式 -->
+   <!-- <link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+
+    &lt;!&ndash; 这是jquery的核心包  &ndash;&gt;
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    &lt;!&ndash; 这是easyui的核心包  &ndash;&gt;
+    <script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>-->
+
+</head>
+<body>
+<a id="ha" class="easyui-linkbutton" data-options="iconCls:'icon-add'">增加</a>
+<table id="dgi"></table>
+<div id="xing"></div>
+<div id="xiui"></div>
+<div id="role"></div>
+
+
+<script>
+    function xiuxiu(rid){
+        //alert(rid)
+        $('#xiui').dialog({
+            title: '修改',
+            width: 400,
+            height: 200,
+            href: 'xiui?rid='+rid,
+            modal: true,
+            buttons:[{
+                text:'保存',
+                handler:function(){
+                    $('#zxc').form('submit', {
+                        url:"http://127.0.0.1:8081/xiugaiii",
+                        onSubmit: function(){
+                        },
+                        success:function(data){
+                            if(data>0){
+
+                                $("#dgi").datagrid("reload")
+                                $('#xiui').dialog('close');
+                            }
+                        }
+                    });
+
+                }
+            },{
+                text:'关闭',
+                handler:function(){
+                    $('#xiui').dialog('close')
+                }
+            }]
+        })
+    }
+    function xini(){
+        $('#ha').linkbutton({
+            onClick:function(){
+                $('#xing').dialog({
+                    title: '增加',
+                    width: 400,
+                    height: 200,
+                    href: 'addo',
+                    modal: true ,
+                    buttons:[{
+                        text:'保存',
+                        handler:function(){
+                            $('#fff').form('submit', {
+                                url:"http://127.0.0.1:8081/addi",
+                                onSubmit: function(){
+                                },
+                                success:function(data){
+                                    if(data>0){
+
+                                        $("#dgi").datagrid("reload")
+                                        $('#xing').dialog('close');
+                                    }
+                                }
+                            });
+
+                        }
+                    },{
+                        text:'关闭',
+                        handler:function(){
+                            $('#xing').dialog('close')
+                        }
+                    }]
+                });
+            }
+        });
+    }
+    function chaxunp(){
+        $('#dgi').datagrid({
+            url:'queryju',
+            singleSelect:true,
+            checkOnSelect:false,
+            selectOnCheck:false,
+            columns:[
+                [
+                {field:'che',checkbox:true,width:100},
+                {field:'rid',title:'主键',width:100},
+                {field:'rname',title:'角色名',width:100},
+                {field:'zuo',title:'操作',width:200,
+                    formatter:function(val,row,index){
+                        var b="<input type='button' value='修改' onclick='xiuxiu("+row.rid+")'>"
+                        var a="<input type='button' value='设置权限' onclick='quanx("+row.rid+",\""+row.rname+"\")'>"
+                        return a+b+"<input type='button' value='删除' onclick='del("+row.rid+")'>"
+                    }
+                }
+            ]
+            ]
+        });
+    }
+    function quanx(rid,rname) {
+        $('#role').dialog({
+            title: '设置' + rname + '的权限',
+            width: 400,
+            height: 200,
+            href: 'http://127.0.0.1:8081/fuiquan?rid=' + rid,
+            modal: true,
+            buttons: [{
+                text: '保存',
+                handler: function () {
+// 			1.获取被选中的树节点——————————最终得到多个权限id字符串
+                    var menuArr = $('#quanshu').tree("getChecked");
+//			2.获取半选中状态的节点——————indeterminate 指的是不确定的半选中状态的节点
+                    var nodes = $('#quanshu').tree('getChecked', 'indeterminate');
+                    var mids = "";
+                    console.info(menuArr)
+                    for (var i = 0; i < menuArr.length; i++) {
+                        mids += "," + menuArr[i].id;
+                    }
+                    for (var i = 0; i < nodes.length; i++) {
+                        mids += "," + nodes[i].id;
+                    }
+                    mids = mids.substring(1);
+// 			2.ajax请求后台保存数据
+                    $.ajax({
+                        type: "post",
+                        url: "http://127.0.0.1:8081/zui",
+                        data: {rid: rid, menuids: mids},
+                        success: function (msg) {
+                            if (msg == 'suc') {
+                                $('#role').dialog("close")
+                                $.messager.show({
+                                    title: '新消息',
+                                    msg: '操作成功',
+                                    timeout: 2000,
+                                    showType: 'slide'
+                                });
+
+                            }
+                        }
+                    })
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#role').dialog("close")
+                }
+            }]
+        })
+    }
+    function del(rid){
+        alert(rid)
+        $.ajax({
+            url:"http://127.0.0.1:8081/deljs",
+            type:"post",
+            data:{rid:rid},
+            success:function(){
+                $('#dgi').datagrid("load")
+            },
+        })
+    }
+    $(function(){
+        chaxunp()
+        xini()
+    })
+</script>
+</body>
+</html>

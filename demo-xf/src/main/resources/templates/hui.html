@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="xian" method="post">
+    <input type="hidden" name="testid" th:value="${t.testid}">
+    测试者:<input name="testname" th:value="${t.testname}"><br>
+    测试者电话:<input name="testiphone"  th:value="${t.testiphone}"><br>
+    测试者性别:<input type="radio" name="testsex" value="1" th:checked="${t!=null}?${t.testsex==1}">男
+    <input type="radio" name="testsex" value="2" th:checked="${t!=null}?${t.testsex==2}">女
+</form>
+</body>
+</html>

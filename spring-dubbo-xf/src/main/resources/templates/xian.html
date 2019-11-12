@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 这是jquery的核心包  -->
+    <script type="text/javascript" src="../jquery.min.js"></script>
+    <script src="../highcharts/code/highcharts.js"></script>
+    <script src="../highcharts/code/modules/exporting.js"></script>
+    <script src="../highcharts/code/modules/export-data.js"></script>
+</head>
+<body>
+<div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+<div id="container1" style="min-width:400px;height:400px"></div>
+</body>
+<script>
+    $(function(){
+        $.ajax({
+            url:"../querymian",
+            type:"post",
+            dataType:"json",
+            async:true,
+            success:function (data) {
+                var xtext = [];//X轴TEXT
+                var nums = [];//y轴数量
+                for (var i = 0; i < data.length; i++) {
+
+                    nums.push(data[i].counts);
+                    xtext.push(data[i].carname);
+                }
+               // alert(xtext);
+
+                var chart = Highcharts.chart('container', {
+                    chart: {
+                        type: 'areaspline'
+                    },
+                    title: {
+                        text: '每个品牌的销量(面积图)'
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'left',
+                        verticalAlign: 'top',
+                        x: 150,
+                        y: 100,
+                        floating: true,
+                        borderWidth: 1,
+                        backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+                    },
+                    xAxis: {
+                        categories: xtext,
+                        crosshair: true
+                    },
+                    yAxis: {
+                        title: {
+                            text: '销量'
+                        }
+                    },
+                    tooltip: {
+                        shared: true,
+                        valueSuffix: ' 辆'
+                    },
+                    plotOptions: {
+                        areaspline: {
+                            fillOpacity: 0.5
+                        }
+                    },
+                    series: [{
+                        name: '售出',
+
+                        data: nums,
+                    }]
+
+                })
+            }
+        })
+    })
+
+
+    $(function(){
+        $.ajax({
+            url:"../queryzhu",
+            type:"post",
+            dataType:"json",
+            async:true,
+            success:function (data) {
+                var xtext = [];//X轴TEXT
+                var nums = [];//y轴数量
+                for (var i = 0; i < data.length; i++) {
+
+                    nums.push(data[i].moneyii);
+                    xtext.push(data[i].timeii);
+                }
+                //alert(xtext);
+                var chart = Highcharts.chart('container1', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: '每天销售量(柱状图)'
+                    },
+                    xAxis: {
+                        categories: xtext,
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '售出'
+                        }
+                    },
+                    tooltip: {
+                        // head + 每个 point + footer 拼接成完整的 table
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} 辆</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: '售出',
+                        data: nums
+                    }]
+                });
+            }
+            })
+    })
+</script>
+</html>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.mapper.CarMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.model.Car" >
+    <id column="carid" property="carid" jdbcType="INTEGER" />
+    <result column="carname" property="carname" jdbcType="VARCHAR" />
+    <result column="cartime" property="cartime" jdbcType="DATE" />
+    <result column="carsl" property="carsl" jdbcType="INTEGER" />
+    <result column="carlx" property="carlx" jdbcType="INTEGER" />
+  </resultMap>
+
+  <select id="querycar" resultType="java.util.LinkedHashMap" >
+    select
+     sum(carsl) y,
+     DATE_FORMAT(cartime,'%Y-%m') name
+     from car
+	 where Date(cartime) between '2019-01-01' and '2020-01-01'
+	 GROUP BY DATE_FORMAT(cartime,'%Y-%m')
+  </select>
+  <select id="querycarall" resultType="java.util.LinkedHashMap" >
+    SELECT DATE_FORMAT(cartime,'%Y-%u') as time,sum(carsl) count,
+    carname name
+     FROM car  GROUP BY  carname
+  </select>
+  <select id="querymian" resultType="java.util.LinkedHashMap" >
+    select sum(carsl) counts,carname from car GROUP BY carname
+  </select>
+  <select id="queryzhu" resultType="java.util.LinkedHashMap" >
+    SELECT DATE_FORMAT(cartime,'%Y-%m-%d') as timeii,sum(carsl)
+ moneyii FROM car
+  GROUP BY  cartime
+  </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <sql id="Base_Column_List" >
+    carid, carname, cartime, carsl, carlx
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from car
+    where carid = #{carid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from car
+    where carid = #{carid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jk.model.Car" >
+    insert into car (carid, carname, cartime, 
+      carsl, carlx)
+    values (#{carid,jdbcType=INTEGER}, #{carname,jdbcType=VARCHAR}, #{cartime,jdbcType=DATE}, 
+      #{carsl,jdbcType=INTEGER}, #{carlx,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jk.model.Car" >
+    insert into car
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="carid != null" >
+        carid,
+      </if>
+      <if test="carname != null" >
+        carname,
+      </if>
+      <if test="cartime != null" >
+        cartime,
+      </if>
+      <if test="carsl != null" >
+        carsl,
+      </if>
+      <if test="carlx != null" >
+        carlx,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="carid != null" >
+        #{carid,jdbcType=INTEGER},
+      </if>
+      <if test="carname != null" >
+        #{carname,jdbcType=VARCHAR},
+      </if>
+      <if test="cartime != null" >
+        #{cartime,jdbcType=DATE},
+      </if>
+      <if test="carsl != null" >
+        #{carsl,jdbcType=INTEGER},
+      </if>
+      <if test="carlx != null" >
+        #{carlx,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jk.model.Car" >
+    update car
+    <set >
+      <if test="carname != null" >
+        carname = #{carname,jdbcType=VARCHAR},
+      </if>
+      <if test="cartime != null" >
+        cartime = #{cartime,jdbcType=DATE},
+      </if>
+      <if test="carsl != null" >
+        carsl = #{carsl,jdbcType=INTEGER},
+      </if>
+      <if test="carlx != null" >
+        carlx = #{carlx,jdbcType=INTEGER},
+      </if>
+    </set>
+    where carid = #{carid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jk.model.Car" >
+    update car
+    set carname = #{carname,jdbcType=VARCHAR},
+      cartime = #{cartime,jdbcType=DATE},
+      carsl = #{carsl,jdbcType=INTEGER},
+      carlx = #{carlx,jdbcType=INTEGER}
+    where carid = #{carid,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+     <!--jqeuy默认的css样式
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+
+   &lt;!&ndash; &lt;!&ndash; 这是jquery的核心包  &ndash;&gt;&ndash;&gt;
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    &lt;!&ndash; 这是easyui的核心包  &ndash;&gt;
+    <script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>-->
+</head>
+<body>
+<a id="btn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">增加</a>
+<table id="yh"></table>
+<div id="add"></div>
+<div id="xiu"></div>
+<div id="zhi"></div>
+
+
+<script type="text/javascript">
+
+    function chaxun(){
+        $('#yh').datagrid({
+            url:'http://127.0.0.1:8081/queryyh',
+            singleSelect:true,
+            checkOnSelect:false,
+            selectOnCheck:false,
+            columns:[
+                [
+                    {field:'che',checkbox:true,width:100},
+                    {field:'uid',title:'主键',width:100},
+                    {field:'uname',title:'用户名',width:100},
+                    {field:'zuo',title:'操作',width:200,
+                        formatter:function(val,row,index){
+                            var a="<input type='button' value='设置角色' onclick='shezhi("+row.uid+",\""+row.uname+"\")'>"
+                            var b="<input type='button' value='修改' onclick='xiugai("+row.uid+")'>"
+                            return a+b+"<input type='button' value='删除' onclick='del("+row.uid+")'>"
+                        }
+                    }
+                ]
+            ]
+        });
+    }
+
+
+    function xin(){
+        $('#btn').linkbutton({
+            onClick:function(){
+                $('#add').dialog({
+                    title: '新增',
+                    width: 400,
+                    height: 200,
+                    href: 'add',
+                    modal: true,
+                    buttons:[{
+                        text:'保存',
+                        handler:function(){
+                            $('#ff').form('submit', {
+                                url:"http://127.0.0.1:8081/addd",
+                                onSubmit: function(){
+                                },
+                                success:function(data){
+                                    if(data>0){
+
+                                        $("#yh").datagrid("reload")
+                                        $('#add').dialog('close');
+                                    }
+                                }
+                            });
+
+                        }
+                    },{
+                        text:'关闭',
+                        handler:function(){
+                            $('#add').dialog('close')
+                        }
+                    }]
+                });
+            }
+        });
+    }
+
+    $(function(){
+        chaxun()
+        xin()
+    })
+    function del(uid){
+        alert(uid)
+        $.ajax({
+            url:"http://127.0.0.1:8081/del",
+            type:"post",
+            data:{uid:uid},
+            success:function(){
+                $('#yh').datagrid("load")
+            },
+        })
+    }
+    function xiugai(uid){
+        $('#xiu').dialog({
+            title: '修改',
+            width: 400,
+            height: 200,
+            href: 'xiu?uid='+uid,
+            modal: true,
+            buttons:[{
+                text:'保存',
+                handler:function(){
+                    $('#lkj').form('submit', {
+                        url:"http://127.0.0.1:8081/xiugai",
+                        onSubmit: function(){
+                        },
+                        success:function(data){
+                            if(data>0){
+
+                                $("#yh").datagrid("reload")
+                                $('#xiu').dialog('close');
+                            }
+                        }
+                    });
+
+                }
+            },{
+                text:'关闭',
+                handler:function(){
+                    $('#xiu').dialog('close')
+                }
+            }]
+        })
+    }
+
+    function shezhi(uid,uname){
+        $('#zhi').dialog({
+            title: '设置'+uname+'角色',
+            width: 400,
+            height: 200,
+            href: 'she?uid='+uid,
+            modal: true ,
+            buttons:[{
+                text:'保存',
+                handler:function(){
+// 				alert(uid)
+                    var rolearr = $("[name='aaa']:checked");
+                    var rids = "";
+                    for (var i = 0; i < rolearr.length; i++) {
+                        rids += ","+rolearr[i].value;
+                    }
+                    rids = rids.substring(1);
+                    $.ajax({
+                        type:"post",
+                        url:"http://127.0.0.1:8081/save",
+                        data:{uid:uid,rids:rids},
+                        success:function(msg){
+                            if(msg == 'suc'){
+                                $('#zhi').dialog("close")
+                                $.messager.show({
+                                    title:'新消息',
+                                    msg:'操作成功',
+                                    timeout:2000,
+                                    showType:'slide'
+                                });
+
+                            }
+                        }
+                    })
+                }
+            },{
+                text:'取消',
+                handler:function(){
+                    $('#zhi').dialog("close")
+                }
+            }]
+        });
+    }
+
+</script>
+</body>
+
+</html>

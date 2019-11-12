@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- jqeuy默认的css样式 -->
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+
+    <!-- &lt;!&ndash; 这是jquery的核心包  &ndash;&gt;-->
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <!--&lt;!&ndash; 这是easyui的核心包  &ndash;&gt;-->
+    <script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../js/util-js.js"></script>
+    <script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+<a id="btn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">增加</a>
+<table id="dg"></table>
+<div id="add"></div>
+<div id="upda"></div>
+</body>
+<script>
+    function chaxun(){
+        $('#dg').datagrid({
+            url:'http://127.0.0.1:8081/querytest',
+            singleSelect:true,
+            checkOnSelect:false,
+            selectOnCheck:false,
+            columns:[
+                [
+                    {field:'che',checkbox:true,width:100},
+                    {field:'testid',title:'主键',width:100},
+                    {field:'testname',title:'测试者',width:100},
+                    {field:'testiphone',title:'测试者电话',width:100},
+                    {field:'testsex',title:'测试者性别',width:100,
+                        formatter:function(val,row,index){
+                            if(val==1){
+                                return "男"
+                            }
+                            if(val==2){
+                                return "女"
+                            }
+                        }
+                    },
+                    {field:'zuo',title:'操作',width:200,
+                        formatter:function(val,row,index){
+                            var b="<input type='button' value='修改' onclick='xiugai("+row.testid+")'>"
+                            return b+"<input type='button' value='删除' onclick='del("+row.testid+")'>"
+                        }
+                    }
+                ]
+            ]
+        });
+    }
+    $(function(){
+        chaxun()
+        xing()
+    })
+    function del(testid) {
+        alert(testid);
+        $.ajax({
+            url:"http://127.0.0.1:8081/del",
+            type:"post",
+            data:{testid:testid},
+            success:function(){
+                $('#dg').datagrid("load")
+            },
+        })
+    }
+    function xiugai(testid){
+       // alert(testid);
+        $('#upda').dialog({
+            title: '修改',
+            width: 400,
+            height: 200,
+            href: 'xiu?testid='+testid,
+            modal: true,
+            buttons:[{
+                text:'保存',
+                handler:function(){
+                    $('#xian').form('submit', {
+                        url:"http://127.0.0.1:8081/xiugai",
+                        onSubmit: function(){
+                        },
+                        success:function(data){
+                            if(data>0){
+
+                                $("#dg").datagrid("reload")
+                                $('#upda').dialog('close');
+                            }
+                        }
+                    });
+
+                }
+            },{
+                text:'关闭',
+                handler:function(){
+                    $('#upda').dialog('close')
+                }
+            }]
+        })
+    }
+    function xing() {
+        $('#btn').linkbutton({
+            onClick:function(){
+                $('#add').dialog({
+                    title: '新增',
+                    width: 400,
+                    height: 200,
+                    href: 'add',
+                    modal: true,
+                    buttons:[{
+                        text:'保存',
+                        handler:function(){
+                            $('#ff').form('submit', {
+                                url:"http://127.0.0.1:8081/addd",
+                                onSubmit: function(){
+                                },
+                                success:function(data){
+                                    if(data>0){
+
+                                        $("#dg").datagrid("reload")
+                                        $('#add').dialog('close');
+                                    }
+                                }
+                            });
+
+                        }
+                    },{
+                        text:'关闭',
+                        handler:function(){
+                            $('#add').dialog('close')
+                        }
+                    }]
+                });
+            }
+        });
+    }
+</script>
+</html>
